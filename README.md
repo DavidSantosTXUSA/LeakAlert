@@ -42,9 +42,11 @@ touch .env
 ```
 Inside .env:
 
+```bash
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 HIBP_API_KEY=your_haveibeenpwned_api_key
+```
 
 Then run:
 
