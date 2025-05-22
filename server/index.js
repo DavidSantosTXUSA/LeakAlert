@@ -27,6 +27,9 @@ async function startServer() {
     console.error("Mongo connection error:", err);
   }
 }
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 startServer();
 

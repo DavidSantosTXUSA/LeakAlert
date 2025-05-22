@@ -11,6 +11,7 @@ export default function Home() {
   const [token, setToken] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerError, setRegisterError] = useState("");
+  const [isBackendWakingUp, setIsBackendWakingUp] = useState(false);
 
   const [results, setResults] = useState({
     uses2FA: false,
@@ -20,6 +21,14 @@ export default function Home() {
     breachCount: null,
     breachDetails: [] as { name: string; domain: string; date: string }[],
   });
+  const pingBackend = async (): Promise<boolean> => {
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + "/ping");
+      return res.ok;
+    } catch (err) {
+      return false;
+    }
+  };
 
 
   const login = async () => {
@@ -36,8 +45,32 @@ export default function Home() {
   };
 
   const register = async () => {
+    setRegisterError("");
+    setIsBackendWakingUp(false);
+
+    const awake = await pingBackend();
+
+    if (!awake) {
+      setIsBackendWakingUp(true);
+      setTimeout(async () => {
+        const retry = await pingBackend();
+        if (!retry) {
+          setRegisterError("Server is sleeping. Please try again in a few seconds.");
+          setIsBackendWakingUp(false);
+          return;
+        }
+        setIsBackendWakingUp(false);
+        await proceedToRegister();
+      }, 4000); // delay before retry
+      return;
+    }
+
+    await proceedToRegister(); // backend already awake
+  };
+
+  const proceedToRegister = async () => {
     try {
-      const res = await axios.post("http://localhost:5050/register", {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/register`, {
         email,
         password,
       });
@@ -53,6 +86,7 @@ export default function Home() {
       setRegisterError("Registration failed. Email may already be in use.");
     }
   };
+
 
   const runAudit = async () => {
     try {
@@ -167,6 +201,11 @@ export default function Home() {
             >
               {isRegistering ? "Register" : "Login"}
             </button>
+            {isBackendWakingUp && (
+              <p className="text-yellow-400 text-sm mt-2">
+                Waking up secure backend... please wait about 2 min then try again (Render sleeps after 15 min of inactivity and takes a while to wake up because im using free plan)
+              </p>
+            )}
 
             {registerError && (
               <p className="text-red-500 text-sm">{registerError}</p>
