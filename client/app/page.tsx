@@ -84,7 +84,7 @@ export default function Home() {
   const generatePDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("SecAudit Security Report", 20, 20);
+    doc.text("LeakAlert Security Report", 20, 20);
 
     doc.setFontSize(12);
     let y = 40;
@@ -121,7 +121,7 @@ export default function Home() {
       doc.text("Good news: No public breaches were found for this email.", 20, y); y += 10;
     }
 
-    doc.save("SecAudit_Report.pdf");
+    doc.save("LeakAlert_Report.pdf");
   };
 
 
@@ -130,17 +130,17 @@ export default function Home() {
       <div className="w-full max-w-md space-y-4">
         <h1 className="text-3xl font-bold mb-2">
 
-          {isRegistering ? "Register" : "Login"} to SecAudit
+          {isRegistering ? "Register" : "Login"} to LeakAlert
         </h1>
         <p className="text-gray-300 mb-4">
-          SecAudit scans your account's email using the HaveIBeenPwned API to check if it's been found in any public data breaches.
+          LeakAlert scans your account's email using the HaveIBeenPwned API to check if it's been found in any public data breaches.
           It also evaluates your basic security hygiene (2FA, password reuse, HTTPS usage).
           Once complete, you’ll get a downloadable security audit report in PDF format.
         </p>
 
         <p className="text-gray-300 text-sm mb-2">
           {isRegistering
-            ? "Create a new SecAudit account. Passwords are encrypted before storage."
+            ? "Create a new LeakAlert account. Passwords are encrypted before storage."
             : "Welcome back! Log in to run your personal security audit."}
         </p>
 
