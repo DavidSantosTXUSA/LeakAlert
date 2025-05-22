@@ -52,8 +52,6 @@ app.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-const axios = require("axios");
-
 app.get("/audit/:email", async (req, res) => {
   const { email } = req.params;
   try {
