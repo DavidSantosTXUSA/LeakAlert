@@ -17,7 +17,7 @@ export default function Home() {
     reusesPasswords: false,
     browserHTTPS: true,
     breached: false,
-    breachCount: 0,
+    breachCount: null,
     breachDetails: [] as { name: string; domain: string; date: string }[],
   });
 
@@ -233,14 +233,15 @@ export default function Home() {
               Run Security Audit
             </button>
 
-            {results.breachCount > 0 || results.breachCount === 0 ? (
+            {results.breachCount !== null && (
               <button
                 onClick={generatePDF}
                 className="w-full bg-gray-700 hover:bg-gray-800 px-4 py-2 rounded text-white mt-2"
               >
                 Download PDF Report
               </button>
-            ) : null}
+            )}
+
           </>
         )}
       </div>
