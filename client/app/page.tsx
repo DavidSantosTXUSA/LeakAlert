@@ -33,10 +33,11 @@ export default function Home() {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://localhost:5050/login", {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
         email,
         password,
       });
+
       setToken(res.data.token);
       setIsLoggedIn(true);
     } catch {
@@ -90,9 +91,9 @@ export default function Home() {
 
   const runAudit = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5050/audit/${email}`
-      );
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/audit/${email}`)
+await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/audit/submit`, { email, results })
+
       const breachCount = res.data.breaches.length;
       setResults((prev) => ({
         ...prev,
@@ -106,10 +107,8 @@ export default function Home() {
       }));
 
 
-      await axios.post("http://localhost:5050/audit/submit", {
-        email,
-        results,
-      });
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/audit/submit`, { email, results })
+
     } catch {
       alert("Audit failed");
     }
